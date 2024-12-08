@@ -1,0 +1,20 @@
+#include <iostream>
+#include <fstream>
+#define PI 3.14159
+
+int main() {
+    std::string str = "Hello, Compiler!";
+    char ch = 'A';
+    int num = 1234;
+    double value = 1.23e10; // scientific notation
+    float hexNum = 0x1A3F; // hexadecimal
+    // This is a single-line comment
+    /*
+    This is a multi-line comment.
+    It spans multiple lines.
+    */
+    if (num > 0) {
+        std::cout << str << std::endl;
+    }
+    return 0;
+}
