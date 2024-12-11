@@ -1,20 +1,98 @@
 #include <iostream>
-#include <fstream>
-#define PI 3.14159
+#include <string>
 
-int main() {
-    std::string str = "Hello, Compiler!";
-    char ch = 'A';
-    int num = 1234;
-    double value = 1.23e10; // scientific notation
-    float hexNum = 0x1A3F; // hexadecimal
-    // This is a single-line comment
-    /*
-    This is a multi-line comment.
-    It spans multiple lines.
-    */
-    if (num > 0) {
-        std::cout << str << std::endl;
+using namespace std;  // Now we don't need to use std:: explicitly
+
+// Function to demonstrate the use of different data types
+void demonstrateDataTypes() {
+    int integerVar = 42;               // Integer data type
+    float floatVar = 3.14f;            // Float data type
+    double doubleVar = 2.71828;        // Double data type
+    char charVar = 'A';                // Char data type
+    bool boolVar = true;               // Boolean data type
+    string stringVar = "Hello";        // String data type
+
+    // Output the values of the variables
+    cout << "Integer: " << integerVar << endl;
+    cout << "Float: " << floatVar << endl;
+    cout << "Double: " << doubleVar << endl;
+    cout << "Char: " << charVar << endl;
+    cout << "Boolean: " << boolVar << endl;
+    cout << "String: " << stringVar << endl;
+}
+
+// Function to demonstrate conditionals (if-else)
+void demonstrateConditionals(int a, int b) {
+    if (a > b) {
+        cout << a << " is greater than " << b << endl;
+    } else if (a < b) {
+        cout << a << " is less than " << b << endl;
+    } else {
+        cout << a << " is equal to " << b << endl;
     }
+}
+
+// Function to demonstrate loops (for and while)
+void demonstrateLoops() {
+    cout << "For loop:" << endl;
+    for (int i = 0; i < 5; ++i) {
+        cout << "i = " << i << endl;  // Loop through 0 to 4
+    }
+
+    cout << "While loop:" << endl;
+    int j = 0;
+    while (j < 5) {
+        cout << "j = " << j << endl;  // Loop through 0 to 4
+        ++j;
+    }
+}
+
+// Function to demonstrate a simple function with return value
+int addNumbers(int x, int y) {
+    return x + y;
+}
+
+// Function to demonstrate passing by reference
+void modifyValue(int &value) {
+    value *= 2;  // Modify the value of the argument by reference
+}
+/*
+multi 
+line
+comment
+*/
+// Main function to tie everything together
+int main() {
+    // Testing the data types demonstration
+    cout << "Demonstrating data types:" << endl;
+    demonstrateDataTypes();
+
+    cout << endl;
+
+    // Testing the conditionals demonstration
+    cout << "Demonstrating conditionals:" << endl;
+    demonstrateConditionals(10, 5);  // Test with a > b
+    demonstrateConditionals(3, 7);   // Test with a < b
+    demonstrateConditionals(4, 4);   // Test with a == b
+
+    cout << endl;
+
+    // Testing the loops demonstration
+    cout << "Demonstrating loops:" << endl;
+    demonstrateLoops();
+
+    cout << endl;
+
+    // Testing the function with return value
+    cout << "Adding numbers 5 and 7: " << addNumbers(5, 7) << endl;
+
+    cout << endl;
+
+    // Testing passing by reference
+    int num = 5;
+    cout << "Before passing by reference, num = " << num << endl;
+    modifyValue(num);  // Modify num by reference
+    cout << "After passing by reference, num = " << num << endl;
+
     return 0;
 }

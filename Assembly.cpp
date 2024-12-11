@@ -48,6 +48,7 @@ public:
 };
 
 // Lexer class
+// Lexer class
 class Lexer {
     string src;
     size_t pos;
@@ -73,6 +74,13 @@ public:
                 pos += 2;
                 while (pos < src.size() - 1 && !(src[pos] == '*' && src[pos + 1] == '/')) pos++;
                 pos += 2;
+                continue;
+            }
+
+            // Handle preprocessor directives (e.g., #include)
+            if (current == '#') {
+                // Skip over the entire preprocessor directive line (e.g., #include <iostream>)
+                while (pos < src.size() && src[pos] != '\n') pos++;
                 continue;
             }
 
@@ -107,7 +115,7 @@ public:
                 case '>': tokens.push_back({T_GT, ">", lineNumber, column}); break;
                 case '+': tokens.push_back({T_PLUS, "+", lineNumber, column}); break;
                 case '-': tokens.push_back({T_MINUS, "-", lineNumber, column}); break;
-                case '': tokens.push_back({T_MUL, "", lineNumber, column}); break;
+                case '*': tokens.push_back({T_MUL, "*", lineNumber, column}); break;
                 case '/': tokens.push_back({T_DIV, "/", lineNumber, column}); break;
                 case '(': tokens.push_back({T_LPAREN, "(", lineNumber, column}); break;
                 case ')': tokens.push_back({T_RPAREN, ")", lineNumber, column}); break;
@@ -300,12 +308,13 @@ private:
         expect(type);
         return value;
     }
+    
 };
 
 // Main compiler logic
 int main() {
     // Read source code from file
-    ifstream file("sample_input.txt");
+    ifstream file("testcode.txt");
     if (!file.is_open()) {
         cerr << "Error: Unable to open source file.\n";
         return 1;
