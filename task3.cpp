@@ -477,11 +477,24 @@ private:
     }
 };
 
-class TypeInfo {
+class TypeInfo
+{
 public:
-    enum class Type { INT, FLOAT, DOUBLE, BOOL, CHAR, STRING, VOID, FUNCTION, ARRAY };
+    enum class Type
+    {
+        INT,
+        FLOAT,
+        DOUBLE,
+        BOOL,
+        CHAR,
+        STRING,
+        VOID,
+        FUNCTION,
+        ARRAY
+    };
     Type type;
-    vector<Type> paramTypes;  // For functions, store parameter types
+    vector<Type> paramTypes;
+    // For functions, store parameter types
 
     // Constructor for regular types
     TypeInfo(Type t) : type(t) {}
@@ -490,28 +503,42 @@ public:
     TypeInfo(Type t, vector<Type> params) : type(t), paramTypes(params) {}
 
     // For displaying type names as strings
-    string toString() const {
-        switch (type) {
-            case Type::INT: return "int";
-            case Type::FLOAT: return "float";
-            case Type::DOUBLE: return "double";
-            case Type::BOOL: return "bool";
-            case Type::CHAR: return "char";
-            case Type::STRING: return "string";
-            case Type::VOID: return "void";
-            case Type::FUNCTION: return "function";
-            case Type::ARRAY: return "array";
-            default: return "unknown";
+    string toString() const
+    {
+        switch (type)
+        {
+        case Type::INT:
+            return "int";
+        case Type::FLOAT:
+            return "float";
+        case Type::DOUBLE:
+            return "double";
+        case Type::BOOL:
+            return "bool";
+        case Type::CHAR:
+            return "char";
+        case Type::STRING:
+            return "string";
+        case Type::VOID:
+            return "void";
+        case Type::FUNCTION:
+            return "function";
+        case Type::ARRAY:
+            return "array";
+        default:
+            return "unknown";
         }
     }
 
     // Check if the TypeInfo is equivalent to another (used for function matching)
-    bool equals(const TypeInfo& other) const {
+    bool equals(const TypeInfo &other) const
+    {
         if (type != other.type)
             return false;
         if (paramTypes.size() != other.paramTypes.size())
             return false;
-        for (size_t i = 0; i < paramTypes.size(); ++i) {
+        for (size_t i = 0; i < paramTypes.size(); ++i)
+        {
             if (paramTypes[i] != other.paramTypes[i])
                 return false;
         }
@@ -519,7 +546,8 @@ public:
     }
 };
 
-class SymbolTableEntry {
+class SymbolTableEntry
+{
 public:
     string name;
     TypeInfo type;
@@ -550,6 +578,30 @@ public:
             throw runtime_error("Semantic error: Variable '" + name + "' is not declared.");
         }
         return symbolTable[name];
+    }
+
+    // No need for "SymbolTable::" here, just declare the functions normally.
+    bool isDeclared(const string &name) const
+    {
+        return symbolTable.find(name) != symbolTable.end();
+    }
+
+    void declareType(const string &name, const string &category)
+    {
+        if (symbolTable.find(name) != symbolTable.end())
+        {
+            throw runtime_error("Semantic error: Type '" + name + "' is already declared.");
+        }
+        symbolTable[name] = category;
+    }
+
+    void printSymbolTable() const
+    {
+        cout << "Symbol Table: " << endl;
+        for (const auto &entry : symbolTable)
+        {
+            cout << "Variable: " << entry.first << ", Type: " << entry.second << endl;
+        }
     }
 
 private:
@@ -778,71 +830,72 @@ private:
         icg.addInstruction("L" + endLabel + ":");
     }
 
-    void parseForStatement() {
-    cout << "Parsing for loop..." << endl;
+    void parseForStatement()
+    {
+        cout << "Parsing for loop..." << endl;
 
-    // Expect 'for'
-    expect(T_FOR);
-    cout << "Token 'for' processed." << endl;
+        // Expect 'for'
+        expect(T_FOR);
+        cout << "Token 'for' processed." << endl;
 
-    // Expect '('
-    expect(T_LPAREN);
-    cout << "Token '(' processed." << endl;
+        // Expect '('
+        expect(T_LPAREN);
+        cout << "Token '(' processed." << endl;
 
-    // Parse initialization part: j = 0
-    parseStatement(); // This will parse the initialization part (e.g., j = 0)
-    cout << "Initialization statement parsed." << endl;
+        // Parse initialization part: j = 0
+        parseStatement(); // This will parse the initialization part (e.g., j = 0)
+        cout << "Initialization statement parsed." << endl;
 
-    // Expect ';' after initialization
-    expect(T_SEMICOLON);
-    cout << "Semicolon after initialization processed." << endl;
+        // Expect ';' after initialization
+        expect(T_SEMICOLON);
+        cout << "Semicolon after initialization processed." << endl;
 
-    // *Debugging Step*: Check the next token after initialization and semicolon
-    cout << "Next token after initialization semicolon: "
-         << tokenTypeToString(tokens[pos].type) << " with value '"
-         << tokens[pos].value << "'" << endl;
+        // *Debugging Step*: Check the next token after initialization and semicolon
+        cout << "Next token after initialization semicolon: "
+             << tokenTypeToString(tokens[pos].type) << " with value '"
+             << tokens[pos].value << "'" << endl;
 
-    // Parse the condition: j < 10
-    string condition = parseCondition(); // Parse the condition explicitly
-    cout << "Condition parsed: " << condition << endl;
+        // Parse the condition: j < 10
+        string condition = parseCondition(); // Parse the condition explicitly
+        cout << "Condition parsed: " << condition << endl;
 
-    // Expect ';' after condition
-    expect(T_SEMICOLON);
-    cout << "Semicolon after condition processed." << endl;
+        // Expect ';' after condition
+        expect(T_SEMICOLON);
+        cout << "Semicolon after condition processed." << endl;
 
-    // *Debugging Step*: Check the next token after condition and semicolon
-    cout << "Next token after condition semicolon: "
-         << tokenTypeToString(tokens[pos].type) << " with value '"
-         << tokens[pos].value << "'" << endl;
+        // *Debugging Step*: Check the next token after condition and semicolon
+        cout << "Next token after condition semicolon: "
+             << tokenTypeToString(tokens[pos].type) << " with value '"
+             << tokens[pos].value << "'" << endl;
 
-    // Parse increment: j++
-    parseIncrementDecrement();  // This will handle increment (j++) or (i++) or any other form of increment
-    cout << "Increment parsed." << endl;
+        // Parse increment: j++
+        parseIncrementDecrement(); // This will handle increment (j++) or (i++) or any other form of increment
+        cout << "Increment parsed." << endl;
 
-    // Expect ')' after increment
-    expect(T_RPAREN);
-    cout << "Closing parenthesis processed." << endl;
+        // Expect ')' after increment
+        expect(T_RPAREN);
+        cout << "Closing parenthesis processed." << endl;
 
-    // Generate Intermediate Code for the loop
-    string startLabel = icg.newTemp();
-    string endLabel = icg.newTemp();
+        // Generate Intermediate Code for the loop
+        string startLabel = icg.newTemp();
+        string endLabel = icg.newTemp();
 
-    icg.addInstruction("L" + startLabel + ":");
+        icg.addInstruction("L" + startLabel + ":");
 
-    // Evaluate condition and jump if false
-    string temp = icg.newTemp();
-    icg.addInstruction(temp + " = " + condition);
-    icg.addInstruction("if " + temp + " goto L" + endLabel); // Jump if false
+        // Evaluate condition and jump if false
+        string temp = icg.newTemp();
+        icg.addInstruction(temp + " = " + condition);
+        icg.addInstruction("if " + temp + " goto L" + endLabel); // Jump if false
 
-    // Parse the body of the loop
-    parseStatement(); // Apply the body of the loop
+        // Parse the body of the loop
+        parseStatement(); // Apply the body of the loop
 
-    // Loop back to the start
-    icg.addInstruction("goto L" + startLabel);
+        // Loop back to the start
+        icg.addInstruction("goto L" + startLabel);
 
-    // End label for the loop
-    icg.addInstruction("L" + endLabel + ":");
-}
+        // End label for the loop
+        icg.addInstruction("L" + endLabel + ":");
+    }
 
     string parseCondition()
     {
@@ -1132,6 +1185,113 @@ private:
         return value;
     }
 };
+class AssemblyCodeGenerator
+{
+private:
+    int labelCount;
+    int tempCount;
+    vector<string> instructions;
+    map<string, string> varToReg; // To map variables to registers (or memory locations)
+    vector<string> assemblyCode;  // Stores the generated assembly code
+
+public:
+    AssemblyCodeGenerator() : labelCount(0), tempCount(0) {}
+
+    string newLabel()
+    {
+        return "L" + to_string(labelCount++);
+    }
+
+    string newTemp()
+    {
+        return "t" + to_string(tempCount++);
+    }
+
+    // Add intermediate instruction to assembly
+    void addInstruction(const string &instruction)
+    {
+        instructions.push_back(instruction);
+    }
+
+    // Map variable to a register
+    string getRegisterForVar(const string &var)
+    {
+        if (varToReg.find(var) == varToReg.end())
+        {
+            // Allocate a new register for the variable if not already mapped
+            varToReg[var] = "R" + to_string(varToReg.size());
+        }
+        return varToReg[var];
+    }
+
+    // Generate assembly code for a single instruction
+    void generateAssembly()
+    {
+        for (const string &instr : instructions)
+        {
+            // Example mapping of operations
+            if (instr.find("=") != string::npos)
+            {
+                // Assignment: var = expression
+                size_t pos = instr.find("=");
+                string var = instr.substr(0, pos - 1);
+                string expr = instr.substr(pos + 2);
+
+                string reg = getRegisterForVar(var);
+
+                // For now, assume expr is a direct number or variable, more complex expressions can be parsed
+                if (expr[0] >= '0' && expr[0] <= '9')
+                {
+                    // If the expression is a number
+                    assemblyCode.push_back("MOV " + reg + ", " + expr);
+                }
+                else
+                {
+                    // If the expression is a variable
+                    string exprReg = getRegisterForVar(expr);
+                    assemblyCode.push_back("MOV " + reg + ", " + exprReg);
+                }
+            }
+            else if (instr.find("if") != string::npos)
+            {
+                // Handle if statements
+                size_t pos = instr.find("if");
+                string condition = instr.substr(3); // Get condition part
+                string labelTrue = newLabel();
+                string labelFalse = newLabel();
+
+                // Assuming the condition is just a comparison like "a >= b"
+                assemblyCode.push_back("CMP " + condition); // Simplified for now
+                assemblyCode.push_back("JE " + labelTrue);
+                assemblyCode.push_back("JMP " + labelFalse);
+                assemblyCode.push_back(labelTrue + ":");
+            }
+            else if (instr.find("while") != string::npos)
+            {
+                // Handle while loops
+                size_t pos = instr.find("while");
+                string condition = instr.substr(6); // Get condition part
+                string labelStart = newLabel();
+                string labelEnd = newLabel();
+
+                assemblyCode.push_back(labelStart + ":");
+                assemblyCode.push_back("CMP " + condition); // Simplified for now
+                assemblyCode.push_back("JE " + labelEnd);
+                assemblyCode.push_back("JMP " + labelStart);
+                assemblyCode.push_back(labelEnd + ":");
+            }
+        }
+    }
+
+    // Print the generated assembly code
+    void printAssembly()
+    {
+        for (const string &line : assemblyCode)
+        {
+            cout << line << endl;
+        }
+    }
+};
 
 int main()
 {
@@ -1146,18 +1306,19 @@ int main()
         float y;
         bool isActive;
         int a;
-        a= 15;
+        a = 15;
         int b;
-        b=10;
+        b = 10;
+        c=5;
         if (a >= b) {
-            a=b;
+            a = b;
         }
-        else{
-            b=a;
+        else {
+            b = a;
         }
         string name;
         // Single line comment
-        /*multilien comsd
+        /*multiline comments
         sfsafasf
         */
         x = 10;
@@ -1169,7 +1330,7 @@ int main()
         cin >> x;
         sum = x + y * 3;
 
-        if(x > 3) {
+        if (x > 3) {
             x = 20;
         }
 
@@ -1179,28 +1340,30 @@ int main()
             i--;
             cout << i;
         }
-        // Replaced while loop with a for loop
-        // for (i = 0; i < 10; i++) {
-        //     cout << i;
-        // }
-        // int j;
-        //  for ( j = 0; j < 10; j++) {
-        //     cout << j;
-        // }
-
         return 0;
     }
-
     )";
+
+    // Initialize Lexer and Tokenize the input
     Lexer lexer(src);
     vector<Token> tokens = lexer.tokenize();
 
+    // Initialize SymbolTable, IntermediateCodeGenerator, and AssemblyCodeGenerator
     SymbolTable symTable;
     IntermediateCodeGnerator icg;
+    AssemblyCodeGenerator acg;
     Parser parser(tokens, symTable, icg);
 
+    // Start parsing the program
     parser.parseProgram();
+
+    // Print the symbol table after parsing
+    symTable.printSymbolTable(); // This will print all declared variables and their types.
+
+    // Generate and print intermediate code and assembly
     icg.printInstructions();
+    acg.generateAssembly();
+    acg.printAssembly();
 
     return 0;
 }
